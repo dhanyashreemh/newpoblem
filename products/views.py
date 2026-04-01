@@ -38,7 +38,7 @@ def shopify_product_webhook(request):
     print("Parsed Data:", data)
 
     try:
-        # create_or_update_product(data)
+        create_or_update_product(data)
         return Response({"message": "Success"}, status=200)
 
     except Exception as e:

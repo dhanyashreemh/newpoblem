@@ -30,7 +30,8 @@ SECRET_KEY = 'django-insecure-$06_l$%cj7q8=r0=xq0dl0ss&mn0y=s8(j4c0!-@e&u2g%rimt
 DEBUG = True
 
 ALLOWED_HOSTS = [
-    "newpoblem.onrender.com"
+    "newpoblem.onrender.com",
+    "127.0.0.1:8000",
 ]
 
 
