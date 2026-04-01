@@ -81,11 +81,11 @@ WSGI_APPLICATION = 'newone.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': os.getenv('DB_NAME'),
-        'USER': os.getenv('DB_USER'),
-        'PASSWORD': os.getenv('DB_PASSWORD'),
-        'HOST': os.getenv('DB_HOST'),
-        'PORT': os.getenv('DB_PORT'),
+        'NAME': 'kanyaka',
+        'USER': 'kanyaka_user',
+        'PASSWORD': 'z0SgJMXoO7hzzRdRgOgmQAspvyeGI6Kt',
+        'HOST': 'dpg-d74vq3f5r7bs73d4ln70-a.oregon-postgres.render.com',
+        'PORT': '5432',
     }
 }
 
