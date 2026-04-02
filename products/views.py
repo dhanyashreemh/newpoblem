@@ -11,17 +11,21 @@ from django.conf import settings
 import hmac, hashlib, base64
 from .services import create_or_update_product
 
-def verify_webhook(received_hmac):
+
+def verify_webhook(request):
+    received_hmac = request.headers.get("X-Shopify-Hmac-Sha256")
+
     if not received_hmac:
         return False
 
-    secret = settings.SHOPIFY_WEBHOOK_SECRET.encode('utf-8')
+    secret = settings.SHOPIFY_WEBHOOK_SECRET.encode("utf-8")
     body = request.body
 
-    digest = hmac.new(secret, body, hashlib.sha256).digest()
-    calculated_hmac = base64.b64encode(digest).decode()
+    computed_hmac = base64.b64encode(
+        hmac.new(secret, body, hashlib.sha256).digest()
+    ).decode()
 
-    return hmac.compare_digest(calculated_hmac, received_hmac)
+    return hmac.compare_digest(received_hmac, computed_hmac)
 
 @api_view(["POST"])
 def shopify_product_webhook(request):
@@ -29,9 +33,9 @@ def shopify_product_webhook(request):
     print("🔥 WEBHOOK HIT")
     print("Headers:", request.headers)
     print("Body:", request.body)
-    received_hmac = request.headers.get("X-Shopify-Hmac-Sha256")
-    # verify first
-    if not verify_webhook(received_hmac):
+
+    # ✅ verify webhook properly
+    if not verify_webhook(request):
         return Response({"error": "Unauthorized"}, status=401)
 
     data = request.data
