@@ -49,6 +49,10 @@ def shopify_product_webhook(request):
 
 @api_view(["GET"])
 def force_migrate(request):
-    call_command('migrate', 'products', 'zero')
+    # Step 1: Reset migration history WITHOUT touching DB
+    call_command('migrate', 'products', 'zero', fake=True)
+
+    # Step 2: Apply migrations properly (creates tables)
     call_command('migrate')
-    return Response({"status": "migrations reapplied"})
+
+    return Response({"status": "migrations fixed"})
