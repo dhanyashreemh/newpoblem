@@ -1,14 +1,14 @@
 from django.shortcuts import render
-import hmac
-import hashlib
-import base64
 from django.conf import settings
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
-from django.conf import settings
 import hmac, hashlib, base64
 from .services import create_or_update_product
 from django.core.management import call_command
+import logging
+
+logger = logging.getLogger(__name__)
+
 
 def verify_webhook(request):
     received_hmac = request.headers.get("X-Shopify-Hmac-Sha256")
@@ -25,27 +25,47 @@ def verify_webhook(request):
 
     return hmac.compare_digest(received_hmac, computed_hmac)
 
+
 @api_view(["POST"])
 def shopify_product_webhook(request):
+    webhook_id = request.headers.get("X-Shopify-Webhook-Id")
 
-    print("🔥 WEBHOOK HIT")
-    print("Headers:", request.headers)
-    print("Body:", request.body)
+    logger.info(f"Webhook received: {webhook_id}")
 
-    # ✅ verify webhook properly
+    # ✅ Security check
+    if not verify_webhook(request):
+        logger.warning("Unauthorized webhook attempt")
+        return Response({"error": "Unauthorized"}, status=401)
+
+    data = request.data
+    print("parsed data" , data)
+
+    try:
+        product , error = create_or_update_product(data)
+        if product:
+            return Response({"message": "Success"}, status=200)
+        else:
+            return Response({"error": error}, status=400)
+        
+    except Exception as e:
+        logger.error(f"Webhook failed: {str(e)}")
+        return Response({"error": "Internal Server Error"}, status=500)
+    
+from .services import delete_product
+
+@api_view(["POST"])
+def shopify_product_delete_webhook(request):
     if not verify_webhook(request):
         return Response({"error": "Unauthorized"}, status=401)
 
     data = request.data
-    print("Parsed Data:", data)
 
-    try:
-        create_or_update_product(data)
-        return Response({"message": "Success"}, status=200)
+    success, message = delete_product(data)
 
-    except Exception as e:
-        print("ERROR:", str(e))
-        return Response({"error": str(e)}, status=500)
+    if success:
+        return Response({"message": message}, status=200)
+    else:
+        return Response({"error": message}, status=400)
 
 @api_view(["GET"])
 def force_migrate(request):
