@@ -1,5 +1,3 @@
-from urllib import request
-
 from django.shortcuts import render
 import hmac
 import hashlib
@@ -10,7 +8,7 @@ from rest_framework.response import Response
 from django.conf import settings
 import hmac, hashlib, base64
 from .services import create_or_update_product
-
+from django.core.management import call_command
 
 def verify_webhook(request):
     received_hmac = request.headers.get("X-Shopify-Hmac-Sha256")
@@ -48,3 +46,9 @@ def shopify_product_webhook(request):
     except Exception as e:
         print("ERROR:", str(e))
         return Response({"error": str(e)}, status=500)
+
+@api_view(["GET"])
+def force_migrate(request):
+    call_command('migrate', 'products', 'zero')
+    call_command('migrate')
+    return Response({"status": "migrations reapplied"})
