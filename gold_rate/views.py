@@ -4,6 +4,7 @@ from .services.engine import update_all_prices
 import json
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework.decorators import api_view
+import requests
 
 @csrf_exempt
 @api_view(["GET"])
