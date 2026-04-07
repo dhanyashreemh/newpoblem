@@ -1,8 +1,9 @@
 import requests
 from newone.settings import SHOP_URL, ACCESS_TOKEN
-from gold_rate.models import PricingConfig 
+
 
 def get_configs():
+    from gold_rate.models import PricingConfig 
     config = PricingConfig.objects.first()
 
     if not config:
