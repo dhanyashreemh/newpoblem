@@ -5,9 +5,9 @@ from products.views import shopify_product_delete_webhook, shopify_product_webho
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('webhook/product/CreateUpdate/', shopify_product_webhook),
+    # path('webhook/product/CreateUpdate/', shopify_product_webhook),
     path('force-migrate/', force_migrate),
-    path("webhook/product/delete/", shopify_product_delete_webhook),
+    # path("webhook/product/delete/", shopify_product_delete_webhook),
     path('gold-rate/', get_gold_rate),
     path("update-gold-rate/", update_gold_rate),
 ]
