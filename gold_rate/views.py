@@ -1,56 +1,49 @@
 from django.http import JsonResponse
-from .models import GoldRate
+from .models import PricingConfig
 from .services.engine import update_all_prices
 import json
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework.decorators import api_view
-import requests
+
 
 @csrf_exempt
 @api_view(["GET"])
 def get_gold_rate(request):
-    if request.method != "GET":
-        return JsonResponse({"error": "Only GET allowed"}, status=405)
+    config = PricingConfig.objects.first()
 
-    purity = request.GET.get("purity", "22K")
-
-    valid_purities = ["22K", "24K"]
-
-    if purity not in valid_purities:
-        return JsonResponse({"error": "Invalid purity"}, status=400)
-
-    rate = GoldRate.objects.filter(purity=purity).order_by("-updated_at").first()
-
-    if not rate:
-        return JsonResponse({"error": f"No {purity} rate found"}, status=400)
+    if not config:
+        return JsonResponse({"error": "No pricing config found"}, status=400)
 
     return JsonResponse({
-        "purity": purity,
-        "rate": rate.rate_per_gram
+        "gold_22k": config.gold_22k,
+        "gold_24k": config.gold_24k,
+        "gst": config.gst_percent,
+        "making": config.making_charge
     })
 
 
 @csrf_exempt
 @api_view(["POST"])
 def update_gold_rate(request):
-    if request.method != "POST":
-        return JsonResponse({"error": "Only POST allowed"}, status=405)
-
     try:
         data = json.loads(request.body)
 
-        rate = data.get("rate")
-        purity = data.get("purity")
+        gold_22k = data.get("gold_22k")
+        gold_24k = data.get("gold_24k")
+        gst = data.get("gst")
+        making = data.get("making")
 
-        if rate is None or purity is None:
-            return JsonResponse({"error": "rate and purity required"}, status=400)
+        if None in [gold_22k, gold_24k, gst, making]:
+            return JsonResponse({"error": "All fields required"}, status=400)
 
-        if purity not in ["22K", "24K"]:
-            return JsonResponse({"error": "Invalid purity"}, status=400)
-
-        GoldRate.objects.update_or_create(
-            purity=purity,
-            defaults={"rate_per_gram": rate}
+        PricingConfig.objects.update_or_create(
+            id=1,
+            defaults={
+                "gold_22k": gold_22k,
+                "gold_24k": gold_24k,
+                "gst_percent": gst,
+                "making_charge": making
+            }
         )
 
         update_all_prices()
@@ -62,6 +55,3 @@ def update_gold_rate(request):
 
     except Exception as e:
         return JsonResponse({"error": str(e)}, status=500)
-    
-
-

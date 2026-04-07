@@ -1,15 +1,10 @@
 from django.contrib import admin
-from .models import GoldRate, MakingCharges, TaxConfig
+from .models import PricingConfig
 
-admin.site.register(GoldRate)
 
-@admin.register(TaxConfig)
-class TaxConfigAdmin(admin.ModelAdmin):
+@admin.register(PricingConfig)
+class PricingConfigAdmin(admin.ModelAdmin):
     def has_add_permission(self, request):
-        return not TaxConfig.objects.exists()
+        return not PricingConfig.objects.exists()
 
-
-@admin.register(MakingCharges)
-class MakingChargesAdmin(admin.ModelAdmin):
-    def has_add_permission(self, request):
-        return not MakingCharges.objects.exists()
+    list_display = ("gold_22k", "gold_24k", "gst_percent", "making_charge", "updated_at")

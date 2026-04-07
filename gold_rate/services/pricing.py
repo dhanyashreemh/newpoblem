@@ -1,24 +1,19 @@
 import requests
 from newone.settings import SHOP_URL, ACCESS_TOKEN
-from gold_rate.models import GoldRate , TaxConfig, MakingCharges
-
+from gold_rate.models import PricingConfig 
 
 def get_configs():
-    gold_22k = GoldRate.objects.filter(purity="22K").last()
-    gold_24k = GoldRate.objects.filter(purity="24K").last()
-    tax = TaxConfig.objects.first()
-    making = MakingCharges.objects.first()
+    config = PricingConfig.objects.first()
 
-    if not all([gold_22k, gold_24k, tax, making]):
-        raise Exception(" Missing configuration")
+    if not config:
+        raise Exception("❌ Missing configuration")
 
     return {
-        "22K": gold_22k.rate_per_gram,
-        "24K": gold_24k.rate_per_gram,
-        "gst": tax.gst_percent,
-        "making": making.charge_per_gram
+        "22K": config.gold_22k,
+        "24K": config.gold_24k,
+        "gst": config.gst_percent,
+        "making": config.making_charge
     }
-
 
 def calculate_price(weight, gold_rate, making_charge, gst):
     base = (weight * gold_rate) + (weight * making_charge)
