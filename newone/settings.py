@@ -14,6 +14,7 @@ DEBUG = False
 ALLOWED_HOSTS = [
     "newpoblem.onrender.com",
     "127.0.0.1:8000",
+    "localhost:8000",
 ]
 
 INSTALLED_APPS = [
@@ -25,16 +26,17 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'products',
+    'gold_rate',
 ]
 
 MIDDLEWARE = [
-    'django.middleware.security.SecurityMiddleware',
+    # 'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
-    'django.middleware.common.CommonMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
+    # 'django.middleware.common.CommonMiddleware',
+    # 'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
-    'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    # 'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
 ROOT_URLCONF = 'newone.urls'
@@ -97,4 +99,6 @@ STATIC_URL = 'static/'
 
 SHOPIFY_WEBHOOK_SECRET = os.getenv('SHOPIFY_WEBHOOK_SECRET')
 
+SHOP_URL = os.getenv('SHOP_URL')
 
+ACCESS_TOKEN = os.getenv('SHOPIFY_ACCESS_TOKEN')

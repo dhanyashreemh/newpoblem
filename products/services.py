@@ -3,7 +3,7 @@ from .models import Product, Variant, Option
 
 
 def create_or_update_product(data):
-    product, _ = Product.objects.update_or_create(
+    product, _  = Product.objects.update_or_create(
         shopify_id=data["id"],
         defaults={
             "title": data.get("title"),
