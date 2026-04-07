@@ -10,7 +10,7 @@ def get_configs():
     making = MakingCharges.objects.first()
 
     if not all([gold_22k, gold_24k, tax, making]):
-        raise Exception("❌ Missing configuration")
+        raise Exception(" Missing configuration")
 
     return {
         "22K": gold_22k.rate_per_gram,

@@ -9,7 +9,7 @@ def get_products():
     res = requests.get(url, headers=headers)
 
     if res.status_code != 200:
-        print("❌ Failed to fetch products:", res.text)
+        print("Failed to fetch products:", res.text)
         return []
 
     return res.json().get("products", [])
@@ -51,6 +51,6 @@ def update_price(variant_id, new_price):
     res = requests.put(url, json=payload, headers=headers)
 
     if res.status_code != 200:
-        print(f"❌ Failed to update variant {variant_id}: {res.text}")
+        print(f"Failed to update variant {variant_id}: {res.text}")
     else:
-        print(f"✅ Updated variant {variant_id} → ₹{new_price}")
+        print(f"Updated variant {variant_id} → ₹{new_price}")

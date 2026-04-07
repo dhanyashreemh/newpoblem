@@ -48,9 +48,9 @@ def update_gold_rate(request):
         if purity not in ["22K", "24K"]:
             return JsonResponse({"error": "Invalid purity"}, status=400)
 
-        GoldRate.objects.create(
+        GoldRate.objects.update_or_create(
             purity=purity,
-            rate_per_gram=rate
+            defaults={"rate_per_gram": rate}
         )
 
         update_all_prices()
