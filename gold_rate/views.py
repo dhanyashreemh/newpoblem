@@ -55,3 +55,8 @@ def update_gold_rate(request):
 
     except Exception as e:
         return JsonResponse({"error": str(e)}, status=500)
+    
+
+@csrf_exempt
+def shopify_product_webhook(request):
+    return JsonResponse({"status": "ok"})

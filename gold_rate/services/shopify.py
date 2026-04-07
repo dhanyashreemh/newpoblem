@@ -5,17 +5,10 @@ import requests
 from newone.settings import SHOP_URL, ACCESS_TOKEN
 
 def get_products():
-    print("🔥 SHOP_URL:", SHOP_URL)
-    print("🔥 ACCESS_TOKEN:", ACCESS_TOKEN)
     url = f"{SHOP_URL}/admin/api/2024-01/products.json"
     headers = {"X-Shopify-Access-Token": ACCESS_TOKEN}
 
-    print("🔥 FINAL URL:", url)
-
     res = requests.get(url, headers=headers)
-
-    print("🔥 STATUS:", res.status_code)
-    print("🔥 RESPONSE:", res.text)
 
     if res.status_code != 200:
         print("Failed to fetch products:", res.text)

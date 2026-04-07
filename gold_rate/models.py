@@ -8,14 +8,12 @@ class PricingConfig(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     def save(self, *args, **kwargs):
-
-        self.__class__.objects.exclude(id=self.id).delete()
-
+        is_update = self.pk is not None
         super().save(*args, **kwargs)
-        from .services.engine import update_all_prices
 
-        print("🔥 Triggering price update...")
-        update_all_prices()
+        if is_update:
+            from .services.engine import update_all_prices
+            update_all_prices()
 
     def __str__(self):
         return "Pricing Configuration"
