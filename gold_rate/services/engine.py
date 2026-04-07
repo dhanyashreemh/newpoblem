@@ -1,5 +1,5 @@
 import requests
-from .shopify import get_metafields, get_products , update_price
+from .shopify import  get_products , update_price
 from .pricing import get_configs , calculate_price
 
 def update_all_prices():
@@ -7,21 +7,20 @@ def update_all_prices():
     products = get_products()
 
     for product in products:
-        product_id = product.get("id")
-
-        weight, purity = get_metafields(product_id)
-
-        if weight == 0:
-            continue
-
-        gold_rate = config.get(purity, config["22K"])
-
         for variant in product.get("variants", []):
+            weight = variant.get("weight", 0) or 10
+
+            purity = "22K" 
+
+            gold_rate = config.get(purity, config["22K"])
+
             new_price = calculate_price(
                 weight,
                 gold_rate,
                 config["making"],
                 config["gst"]
             )
+
+            print("🔥 Updating:", variant["id"], "→", new_price)
 
             update_price(variant["id"], new_price)

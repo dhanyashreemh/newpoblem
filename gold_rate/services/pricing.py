@@ -6,7 +6,7 @@ def get_configs():
     config = PricingConfig.objects.first()
 
     if not config:
-        raise Exception("❌ Missing configuration")
+        raise Exception("Missing configuration")
 
     return {
         "22K": config.gold_22k,

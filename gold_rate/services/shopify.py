@@ -1,3 +1,6 @@
+from itertools import product
+from unittest import result
+
 import requests
 from newone.settings import SHOP_URL, ACCESS_TOKEN
 
@@ -29,7 +32,13 @@ def get_metafields(product_id):
 
     data = res.json().get("metafields", [])
 
-    weight, purity = 0, "22K"
+    result = get_metafields(product)
+
+    if isinstance(result, tuple):
+        weight, purity = result
+    else:
+        print("❌ Unexpected metafield result:", result)
+        weight, purity = 10, "22K"
 
     for field in data:
         if field.get("key") == "weight":
