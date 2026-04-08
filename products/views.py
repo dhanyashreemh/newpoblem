@@ -67,12 +67,3 @@ def shopify_product_delete_webhook(request):
     else:
         return Response({"error": message}, status=400)
 
-@api_view(["GET"])
-def force_migrate(request):
-    # Step 1: Reset migration history WITHOUT touching DB
-    call_command('migrate', 'products', 'zero', fake=True)
-
-    # Step 2: Apply migrations properly (creates tables)
-    call_command('migrate')
-
-    return Response({"status": "migrations fixed"})

@@ -54,8 +54,6 @@ def create_or_update_product(data):
 
     return product
 
-from .models import Product
-
 
 def delete_product(data):
     product_id = data.get("id")

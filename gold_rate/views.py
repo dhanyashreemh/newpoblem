@@ -4,7 +4,26 @@ from .services.engine import update_all_prices
 import json
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework.decorators import api_view
+from .models import PricingConfig
 
+@csrf_exempt
+def shopify_product_update(request):
+    if request.method == "POST":
+        data = json.loads(request.body)
+
+        # DEBUG FIRST (IMPORTANT)
+        print("SHOPIFY WEBHOOK DATA:", data)
+
+        # OPTION 1: Using price
+        for variant in data.get("variants", []):
+            price = float(variant.get("price", 0))
+
+            PricingConfig.objects.update_or_create(
+                id=1,
+                defaults={"gold_22k": price}
+            )
+
+        return JsonResponse({"status": "updated"})
 
 @csrf_exempt
 @api_view(["GET"])
@@ -60,3 +79,23 @@ def update_gold_rate(request):
 @csrf_exempt
 def shopify_product_webhook(request):
     return JsonResponse({"status": "ok"})
+
+
+@csrf_exempt
+def shopify_product_update(request):
+    if request.method == "POST":
+        data = json.loads(request.body)
+
+        # DEBUG FIRST (IMPORTANT)
+        print("SHOPIFY WEBHOOK DATA:", data)
+
+        # OPTION 1: Using price
+        for variant in data.get("variants", []):
+            price = float(variant.get("price", 0))
+
+            PricingConfig.objects.update_or_create(
+                purity="22K",
+                defaults={"rate": price}
+            )
+
+        return JsonResponse({"status": "updated"})

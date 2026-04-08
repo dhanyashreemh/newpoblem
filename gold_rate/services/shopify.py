@@ -42,6 +42,7 @@ def get_metafields(product_id):
     return weight, purity
 
 def update_price(variant_id, new_price):
+
     url = f"{SHOP_URL}/admin/api/2024-01/variants/{variant_id}.json"
 
     headers = {
@@ -62,3 +63,5 @@ def update_price(variant_id, new_price):
         print(f"Failed to update variant {variant_id}: {res.text}")
     else:
         print(f"Updated variant {variant_id} → ₹{new_price}")
+
+
