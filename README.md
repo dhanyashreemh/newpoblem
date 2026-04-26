@@ -16,30 +16,6 @@ This project demonstrates authentication using JWT and full CRUD operations for 
 
 ---
 
-##  Project Structure
-
-```
-project/
-│
-├── app/
-│   ├── controllers/
-│   │   ├── ProductController.php
-│   │   └── AuthController.php
-│   │
-│   ├── models/
-│   │   └── User.php
-│
-├── routes/
-│   └── web.php
-│
-├── public/
-│   └── index.php
-│
-├── .env
-└── README.md
-```
-
----
 
 ##  Setup Instructions
 
